@@ -17,7 +17,6 @@
     "lint": "peasant lint"
   },
   "dependencies": {
-    "babel-runtime": "^5.8.20",
     "minim-api-description": "^0.1.0"
   },
   "devDependencies": {
