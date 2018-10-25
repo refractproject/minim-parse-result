@@ -12,6 +12,7 @@ import minimParseResult from '../src/parse-result';
 const namespace = minim.namespace()
   .use(minimParseResult);
 
+const ParseResult = namespace.getElementClass('parseResult');
 const Annotation = namespace.getElementClass('annotation');
 const Category = namespace.getElementClass('category');
 
@@ -134,6 +135,43 @@ describe('Parse result namespace', () => {
       items.forEach((item) => {
         expect(item).to.be.an.instanceof(Annotation);
         expect(item).to.have.class('error');
+      });
+    });
+
+    describe('#map', () => {
+      it('transforms the parse result content', () => {
+        parseResult = new ParseResult([1, 2]);
+
+        const result = parseResult.map(element => element.toValue() * 2);
+        expect(result.toValue()).to.deep.equal([2, 4]);
+      });
+
+      it('does not transform annotation elements', () => {
+        const annotation = new Annotation();
+        parseResult = new ParseResult([annotation]);
+
+        const result = parseResult.map(() => null);
+        expect(result).to.deep.equal(parseResult);
+      });
+    });
+
+    describe('#flatMap', () => {
+      it('transforms the parse result content', () => {
+        const result = new ParseResult([1, 2])
+          .flatMap(number =>
+            new ParseResult([
+              number.toValue() * 2,
+              number.toValue() * 4,
+            ]))
+          .toValue();
+
+        expect(result).to.deep.equal([2, 4, 4, 8]);
+      });
+
+      it('does not transform annotation elements', () => {
+        parseResult = new ParseResult([new Annotation()]);
+        const result = parseResult.flatMap(() => new ParseResult([1, 2]));
+        expect(result).not.to.equal(parseResult);
       });
     });
   });

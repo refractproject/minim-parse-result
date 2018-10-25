@@ -1,5 +1,11 @@
 # Minim Parse Result
 
+## Master
+
+### Enhancements
+
+- Adds a `map` and `flatMap` operator to ParseResult.
+
 ## 0.10.1
 
 ### Enhancements

@@ -40,6 +40,51 @@ export function namespace(options) {
     }
 
     /**
+     * @callback mapCallback
+     * @param {Element} element
+     */
+
+    /** Returns a new ParseResult by mapping non-annotation values using `transform`.
+     * @param {mapCallback} transform
+     * @param thisArg
+     * @returns array
+     * @memberof ParseResult.prototype
+     */
+    map(transform, thisArg) {
+      return new ParseResult(super.map((element) => {
+        if (element.element === 'annotation') {
+          return element;
+        }
+
+        return transform(element);
+      }, thisArg));
+    }
+
+    /**
+     * @callback flatMapCallback
+     * @param {Element} element
+     * @returns {ParseResult}
+     */
+
+    /** Returns the result of applying `transform` to non-annotation values, flattening the result.
+     * @param {flatMapCallback} transform
+     * @param thisArg
+     * @returns {ParseResult}
+     * @memberof ParseResult.prototype
+     */
+    flatMap(transform, thisArg) {
+      return this.reduce((result, element) => {
+        if (element.element === 'annotation') {
+          result.push(element);
+        } else {
+          transform.bind(thisArg, element).call().forEach(item => result.push(item));
+        }
+
+        return result;
+      }, new ParseResult());
+    }
+
+    /**
      * @name annotations
      * @type ArraySlice
      * @memberof ParseResult.prototype
