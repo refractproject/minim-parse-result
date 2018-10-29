@@ -4,7 +4,7 @@
 
 ### Enhancements
 
-- Adds a `map` and `flatMap` operator to ParseResult.
+- Adds a `mapElement` and `flatMapElement` operator to ParseResult.
 
 ## 0.10.1
 

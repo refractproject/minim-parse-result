@@ -138,11 +138,11 @@ describe('Parse result namespace', () => {
       });
     });
 
-    describe('#map', () => {
+    describe('#mapElement', () => {
       it('transforms the parse result content', () => {
         parseResult = new ParseResult([1, 2]);
 
-        const result = parseResult.map(element => element.toValue() * 2);
+        const result = parseResult.mapElement(element => element.toValue() * 2);
         expect(result.toValue()).to.deep.equal([2, 4]);
       });
 
@@ -150,15 +150,15 @@ describe('Parse result namespace', () => {
         const annotation = new Annotation();
         parseResult = new ParseResult([annotation]);
 
-        const result = parseResult.map(() => null);
+        const result = parseResult.mapElement(() => null);
         expect(result).to.deep.equal(parseResult);
       });
     });
 
-    describe('#flatMap', () => {
+    describe('#flatMapElement', () => {
       it('transforms the parse result content', () => {
         const result = new ParseResult([1, 2])
-          .flatMap(number =>
+          .flatMapElement(number =>
             new ParseResult([
               number.toValue() * 2,
               number.toValue() * 4,
@@ -170,7 +170,7 @@ describe('Parse result namespace', () => {
 
       it('does not transform annotation elements', () => {
         parseResult = new ParseResult([new Annotation()]);
-        const result = parseResult.flatMap(() => new ParseResult([1, 2]));
+        const result = parseResult.flatMapElement(() => new ParseResult([1, 2]));
         expect(result).not.to.equal(parseResult);
       });
     });
